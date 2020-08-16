@@ -20,29 +20,31 @@ if [ "${latest_v2ray_version}" = "" ] ; then
   ui_print "Error: Connect official V2Ray download link failed." 
   exit 1
 fi
-ui_print "- Download latest V2Ray core ${latest_v2ray_version}-${ARCH}"
-case "${ARCH}" in
-  arm)
-    download_v2ray_link="${official_v2ray_link}/download/${latest_v2ray_version}/v2ray-linux-arm32-v7a.zip"
-    ;;
-  arm64)
-    download_v2ray_link="${official_v2ray_link}/download/${latest_v2ray_version}/v2ray-linux-arm64-v8a.zip"
-    ;;
-  x86)
-    download_v2ray_link="${official_v2ray_link}/download/${latest_v2ray_version}/v2ray-linux-32.zip"
-    ;;
-  x64)
-    download_v2ray_link="${official_v2ray_link}/download/${latest_v2ray_version}/v2ray-linux-64.zip"
-    ;;
-esac
-download_v2ray_zip="/data/v2ray/run/v2ray-core.zip"
-curl "${download_v2ray_link}" -k -L -o "${download_v2ray_zip}" >&2
-if [ "$?" != "0" ] ; then
-  ui_print "Error: Download V2Ray core failed."
-  exit 1
-fi
+# ui_print "- Download latest V2Ray core ${latest_v2ray_version}-${ARCH}"
+# case "${ARCH}" in
+#   arm)
+#     download_v2ray_link="${official_v2ray_link}/download/${latest_v2ray_version}/v2ray-linux-arm32-v7a.zip"
+#     ;;
+#   arm64)
+#     download_v2ray_link="${official_v2ray_link}/download/${latest_v2ray_version}/v2ray-linux-arm64-v8a.zip"
+#     ;;
+#   x86)
+#     download_v2ray_link="${official_v2ray_link}/download/${latest_v2ray_version}/v2ray-linux-32.zip"
+#     ;;
+#   x64)
+#     download_v2ray_link="${official_v2ray_link}/download/${latest_v2ray_version}/v2ray-linux-64.zip"
+#     ;;
+# esac
+# download_v2ray_zip="/data/v2ray/run/v2ray-core.zip"
+# curl "${download_v2ray_link}" -k -L -o "${download_v2ray_zip}" >&2
+# if [ "$?" != "0" ] ; then
+#   ui_print "Error: Download V2Ray core failed."
+#   exit 1
+# fi
 # install v2ray execute file
 ui_print "- Install V2Ray core $ARCH execute files"
+unzip -o "$ZIPFILE" 'v2ray-core.zip' -d /data/v2ray/run/ >&2
+download_v2ray_zip="/data/v2ray/run/v2ray-core.zip"
 unzip -j -o "${download_v2ray_zip}" "geoip.dat" -d /data/v2ray >&2
 unzip -j -o "${download_v2ray_zip}" "geosite.dat" -d /data/v2ray >&2
 unzip -j -o "${download_v2ray_zip}" "v2ray" -d $MODPATH/system/bin >&2

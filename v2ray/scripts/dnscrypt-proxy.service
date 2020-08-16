@@ -155,7 +155,13 @@ create_proxy_iptables() {
   ## create iptables proxy chains for dns
 	${iptables_wait} -t nat -N V2RAY_APP_DNS
   ## build basic iptables proxy chains
-  ${iptables_wait} -t nat -A V2RAY_APP_DNS -p udp -j DNAT --to-destination ${host_ip}:${dns_port}
+  if [ -f /data/v2ray/dns ]; then
+    host_ip=$(cat /data/v2ray/dns | head -n1)
+    dns_port=53
+    ${iptables_wait} -t nat -A V2RAY_APP_DNS -p udp -j DNAT --to-destination ${host_ip}:${dns_port}
+  else
+    ${iptables_wait} -t nat -A V2RAY_APP_DNS -p udp -j DNAT --to-destination ${host_ip}:${dns_port}
+  fi
   if ! iptables_chain_exist "${iptables_chains}" "APP_DNS_PROXY" && ${proxy_for_app} ; then
 	  ## proxy app network
 	  proxy_app_dns_iptables
