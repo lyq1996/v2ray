@@ -24,7 +24,7 @@ jobs:
       
       before_deploy:
         # Set up git user name and tag this commit
-        - git config --local user.name "lyq1996"
+        - git config --local user.name "hiqweqe"
         - git config --local user.email "qqwyeuiq@163.com"
         - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
         - git tag $TRAVIS_TAG
@@ -34,8 +34,6 @@ jobs:
         skip_cleanup: true
         provider: releases
         token: $github_oauth_key
-        on:
-          tags: true
         file: 
           - v2ray-${TRAVIS_TAG}.zip
       
