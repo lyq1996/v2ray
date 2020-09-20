@@ -1,16 +1,18 @@
 echo -e "Select Platform\n 1): arm32-v7a\n 2): arm64-v8a\n"
 read -p ":" platfrom
 echo "- Connect official V2Ray download link."
+baseLink=$(curl -s https://github.com/v2ray/v2ray-core/releases/latest | grep -Eo "https://.*v[0-9]+.[0-9]+.[0-9]+" | sed "s/tag/download/g")
+
 case $platfrom in
    "1")
-    curl "https://github.com/v2ray/v2ray-core/releases/download/v4.27.0/v2ray-linux-arm32-v7a.zip" -k -L -o "v2ray-core.zip" >&2
+    curl "${baseLink}/v2ray-linux-arm32-v7a.zip" -k -L -o "v2ray-core.zip" >&2
     if [ "$?" != "0" ] ; then
         ui_print "Error: Download V2Ray core failed."
         exit 1
     fi
     ;;
    "2")
-    curl "https://github.com/v2ray/v2ray-core/releases/download/v4.27.0/v2ray-linux-arm64-v8a.zip" -k -L -o "v2ray-core.zip" >&2
+    curl "${baseLink}/v2ray-linux-arm64-v8a.zip" -k -L -o "v2ray-core.zip" >&2
     if [ "$?" != "0" ] ; then
         ui_print "Error: Download V2Ray core failed."
         exit 1
@@ -22,12 +24,13 @@ case $platfrom in
 esac
 
 echo "- Fetch Newest v2ray-rules-dat"
-curl "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/download/202008152202/geoip.dat" -k -L -o geoip.dat >&2
+rulesBaselink=$(curl -s https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest | grep -Eo "https://.*/tag/[0-9]+" | sed "s/tag/download/g")
+curl "${rulesBaselink}/geoip.dat" -k -L -o geoip.dat >&2
 if [ "$?" != "0" ] ; then
     ui_print "Error: Download geoip.dat failed."
     exit 1
 fi
-curl "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/download/202008152202/geosite.dat" -k -L -o geosite.dat >&2
+curl "${rulesBaselink}/geosite.dat" -k -L -o geosite.dat >&2
 if [ "$?" != "0" ] ; then
     ui_print "Error: Download geoip.dat failed."
     exit 1
