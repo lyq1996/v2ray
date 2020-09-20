@@ -1,5 +1,6 @@
-echo -e "Select Platform\n 1): arm32-v7a\n 2): arm64-v8a\n"
-read -p ":" platfrom
+#echo -e "Select Platform\n 1): arm32-v7a\n 2): arm64-v8a\n"
+#read -p ":" platfrom
+platfrom=2
 echo "- Connect official V2Ray download link."
 baseLink=$(curl -s https://github.com/v2ray/v2ray-core/releases/latest | grep -Eo "https://.*v[0-9]+.[0-9]+.[0-9]+" | sed "s/tag/download/g")
 
