@@ -1,0 +1,44 @@
+dist: focal
+
+os:
+  - linux
+
+stages:
+  - name: build zip
+
+jobs:
+  # job parallel
+  include:
+    - stage: build zip
+      script: 
+      - cd ~/build/lyq1996/v2ray/
+      - sh generateZip.sh
+      
+      after_success:
+        - echo "build finished."
+        - curl -s "http://sc.ftqq.com/$serverchan_key.send?text=Successed" -d "&desp=v2ray"
+
+      after_failure:
+        - echo "build failed."
+        - curl -s "http://sc.ftqq.com/$serverchan_key.send?text=Failed" -d "&desp=v2ray"
+      
+      before_deploy:
+        # Set up git user name and tag this commit
+        - git config --local user.name "lyq1996"
+        - git config --local user.email "qqwyeuiq@163.com"
+        - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
+        - git tag $TRAVIS_TAG
+        - mv v2ray-magisk.zip v2ray-${TRAVIS_TAG}.zip
+      
+      deploy:
+        skip_cleanup: true
+        provider: releases
+        token: $github_oauth_key
+        on:
+          tags: true
+        file: 
+          - v2ray-${TRAVIS_TAG}.zip
+      
+      after_deploy:
+        - echo "Send notifacation to ServerChan."
+        - curl -s "http://sc.ftqq.com/$serverchan_key.send?text=LinkHere" -d "&desp=https://github.com/lyq1996/v2ray/releases/download/${TRAVIS_TAG}/v2ray-${TRAVIS_TAG}.zip"
